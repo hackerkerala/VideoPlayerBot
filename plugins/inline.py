@@ -1,38 +1,39 @@
-"""
-VideoPlayerBot, Telegram Video Chat Bot
-Copyright (c) 2021  Asm Safone <https://github.com/AsmSafone>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>
-"""
-
-import asyncio
-from config import REPLY_MESSAGE
-from pyrogram import Client, errors
 from pyrogram.handlers import InlineQueryHandler
-from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup
 from youtubesearchpython import VideosSearch
+from config import Config
+from utils import LOGGER
+from pyrogram.types import (
+    InlineQueryResultArticle, 
+    InputTextMessageContent, 
+    InlineKeyboardButton, 
+    InlineKeyboardMarkup
+)
+from pyrogram import (
+    Client, 
+    errors
+)
 
 
-buttons = []
+buttons = [
+    [
+        InlineKeyboardButton('⚡️DEV', url='https://albinpraveen.ml/portfolio'),
+        InlineKeyboardButton('🧩 Report Bug', url='https://t.me/i_am_albin_praveen'),
+    ]
+    ]
+def get_cmd(dur):
+    if dur:
+        return "/play"
+    else:
+        return "/stream"
 @Client.on_inline_query()
 async def search(client, query):
     answers = []
-    if query.query == "SAF_ONE":
+    if query.query == "ETHO_ORUTHAN_PM_VANNU":
         answers.append(
             InlineQueryResultArticle(
-                title="Deploy Own Video Player Bot",
-                input_message_content=InputTextMessageContent(f"", disable_web_page_preview=True),
+                title="Deploy",
+                input_message_content=InputTextMessageContent(f"{Config.REPLY_MESSAGE}\n\n<b>You can't use this bot in your group, contact @i_am_albin_praveen.</b>", disable_web_page_preview=True),
                 reply_markup=InlineKeyboardMarkup(buttons)
                 )
             )
@@ -43,7 +44,7 @@ async def search(client, query):
         await client.answer_inline_query(
             query.id,
             results=answers,
-            switch_pm_text=("✍️ Type An Video Name!"),
+            switch_pm_text=("Search a youtube video"),
             switch_pm_parameter="help",
             cache_time=0
         )
@@ -58,9 +59,7 @@ async def search(client, query):
                         v["viewCount"]["short"]
                     ),
                     input_message_content=InputTextMessageContent(
-                        "/stream https://www.youtube.com/watch?v={}".format(
-                            v["id"]
-                        )
+                        "{} https://www.youtube.com/watch?v={}".format(get_cmd(v["duration"]), v["id"])
                     ),
                     thumb_url=v["thumbnails"][0]["url"]
                 )
@@ -74,16 +73,6 @@ async def search(client, query):
             await query.answer(
                 results=answers,
                 cache_time=0,
-                switch_pm_text=("❌ No Results Found!"),
+                switch_pm_text=("Nothing found"),
                 switch_pm_parameter="",
             )
-
-
-            
-__handlers__ = [
-    [
-        InlineQueryHandler(
-            search
-        )
-    ]
-]
