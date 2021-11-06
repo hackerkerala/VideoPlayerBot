@@ -88,6 +88,7 @@ async def search(client, query):
             )
 
 
+            
 __handlers__ = [
     [
         InlineQueryHandler(
