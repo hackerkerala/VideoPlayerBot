@@ -24,7 +24,16 @@ from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent, In
 from youtubesearchpython import VideosSearch
 
 
-buttons = []
+buttons = [
+            [
+                InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
+                InlineKeyboardButton("SUPPORT", url="https://t.me/AsmSupport"),
+            ],
+            [
+                InlineKeyboardButton("🤖 MAKE YOUR OWN BOT 🤖", url="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot"),
+            ]
+         ]
+
 @Client.on_inline_query()
 async def search(client, query):
     answers = []
@@ -32,7 +41,7 @@ async def search(client, query):
         answers.append(
             InlineQueryResultArticle(
                 title="Deploy Own Video Player Bot",
-                input_message_content=InputTextMessageContent(f"", disable_web_page_preview=True),
+                input_message_content=InputTextMessageContent(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @AsmSupport 👑</b>", disable_web_page_preview=True),
                 reply_markup=InlineKeyboardMarkup(buttons)
                 )
             )
@@ -79,8 +88,7 @@ async def search(client, query):
             )
 
 
-            
-handlers = [
+__handlers__ = [
     [
         InlineQueryHandler(
             search
